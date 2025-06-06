@@ -1,0 +1,24 @@
+{
+  "name": "trabalho_api_js",
+  "version": "1.0.0",
+  "description": "Esse trabalho é uma forma de exercitar nossos conhecimentos em APIs!",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cauacozz11/Trabalho_API_Js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cauacozz11/Trabalho_API_Js/issues"
+  },
+  "homepage": "https://github.com/cauacozz11/Trabalho_API_Js#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
