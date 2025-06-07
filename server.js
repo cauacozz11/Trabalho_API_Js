@@ -8,3 +8,7 @@ let time = [
     { id: 3, jogador: "Marcelin", numero: 1},
     { id: 4, jogador: "Ximbinha", numero: 21},
 ]
+
+app.get ("/time", (req, res)=> {
+    res.json(time)
+})
