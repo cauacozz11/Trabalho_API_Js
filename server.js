@@ -42,3 +42,29 @@ let numero = [
     { id: 5, num: 21 },
     { id: 6, num: 30},
 ]
+
+app.get ("/numero/id:", (req, res) => {
+    if (posicao !== -1)
+    res.status(200).json(numero[posicao]);
+})
+
+app.put ("/jogador:id", (req,res) => {
+    const id  = parseInt(res.params.id);
+    const posicao = numero.findIndex(jogador => numero.id===id);
+
+    if (posicao !== -1) {
+        numero[posicao] = {id, ...req,body}
+        res.status(200).json([posicao]);
+    }
+
+    else {
+        res.status(404).json({ erro: "O Jogador não foi encontrado..."});
+    }
+})
+
+
+app.listen(port, () => {
+
+    console.log(`O time foi escalado em http://localhost${port}`);
+
+})
