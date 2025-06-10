@@ -5,13 +5,12 @@ app.use(express.json());
 
 /* O Array foi criado para guardar as informações do time, nesse caso o vetor*/
 let jogador = [
-    { id: 1, jogador: "Fabin"},
-    { id: 2, jogador: "Jeferson"},
-    { id: 3, jogador: "Marcelin"},
-    { id: 4, jogador: "Ximbinha"},
-    { id: 5, jogador: "Marquin"},
-    { id: 6, jogador: "Gilson"},  
-]
+    { id: 1, name: "Fabin" , numero: 11 , perna_boa: "Direita"},
+    { id: 2, name: "Jeferson" , numero: 21 , perna_boa: "Esquerda"}, 
+    { id: 3, name: "Marcelin" ,  numero: 32 ,  perna_boa: "Direita"},
+    { id: 4, name: "Ximbinha" , numero: 24 ,  perna_boa: "Direita"},
+    { id: 5, name: "Gilson" ,  numero: 38 , perna_boa: "Esquerda"},  
+];
  
 /* Aqui uma função de busca é utilizada para mostrar todos os itens que estão dentro do Array, para o "usuário" poder visualizar*/
 app.get ("/jogador/id:", (req, res) => {
@@ -19,12 +18,16 @@ app.get ("/jogador/id:", (req, res) => {
     res.status(200).json(jogador[posicao]);
 })
 
+app.get ("/jogador"), (req, res) => {
+    res.json(jogador)
+}
+
 app.put ("/jogador:id", (req,res) => {
     const id  = parseInt(res.params.id);
     const posicao = jogador.findIndex(jogador => jogador.id===id);
 
     if (posicao !== -1) {
-        jogador[posicao] = {id, ...req,body}
+        nome[posicao] = {id, ...req,body}
         res.status(200).json([posicao]);
     }
 
@@ -34,23 +37,22 @@ app.put ("/jogador:id", (req,res) => {
 })
 
 
-let numero = [
-    { id: 1, num: 11 },
-    { id: 2, num: 9},
-    { id: 3, num: 1},
-    { id: 4, num: 12},
-    { id: 5, num: 21 },
-    { id: 6, num: 30},
-]
+let clube = [
+    { id: 1, time: "Ibis" , presidente: "Ozir Ramos Junior" , estadio: "Estádio Municipal Ademir Cunha"},
+    { id: 2, time: "Ponte preta" , presidente: "Marco Antônio" , estadio: "Estádio Moisés Lucarelli"},
+    { id: 3, time: "Arsenal" , presidente: "Stan Kroenke" , estadio: "Emirates Stadium"},
+    { id: 4, time: "Foraleza" ,  presidente: "José Rolim" , estadio: "Arena Castelão"},
+    { id: 5, time: "Maranhão Atlético clube" , presidente: "Carlos Eduardo" , estadio: "Estádio Governador São Castelo"},
+];
 
-app.get ("/numero/id:", (req, res) => {
+app.get ("/clube/id:", (req, res) => {
     if (posicao !== -1)
-    res.status(200).json(numero[posicao]);
+    res.status(200).json(clube[posicao]);
 })
 
-app.put ("/jogador:id", (req,res) => {
+app.put ("/clube:id", (req,res) => {
     const id  = parseInt(res.params.id);
-    const posicao = numero.findIndex(jogador => numero.id===id);
+    const posicao = clube.findIndex(clube => clube.id===id);
 
     if (posicao !== -1) {
         numero[posicao] = {id, ...req,body}
@@ -58,7 +60,7 @@ app.put ("/jogador:id", (req,res) => {
     }
 
     else {
-        res.status(404).json({ erro: "O Jogador não foi encontrado..."});
+        res.status(404).json({ erro: "O clube não foi encontrado..."});
     }
 })
 
