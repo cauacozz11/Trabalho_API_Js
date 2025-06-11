@@ -116,7 +116,7 @@ app.delete("/clube/:id" , (req, res) => {
     const posicao = clube.findIndex(clube => clube.id === id);
 
     if (posicao !== -1) {
-        res.status(200).json({jogadores: jogador , mensagem: "O clube foi deletado com sucesso!"});
+        res.status(200).json({clubes: clube , mensagem: "O clube foi deletado com sucesso!"});
     }
     else {
         res.status(404).json({ erro: "O clube não foi encontrado"})
