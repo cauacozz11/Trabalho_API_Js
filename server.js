@@ -12,31 +12,58 @@ let jogador = [
     { id: 5, name: "Gilson" ,  numero: 38 , perna_boa: "Esquerda"},  
 ];
  
-/* Aqui uma função de busca é utilizada para mostrar todos os itens que estão dentro do Array, para o "usuário" poder visualizar*/
-app.get ("/jogador/id:", (req, res) => {
-    if (posicao !== -1)
-    res.status(200).json(jogador[posicao]);
-})
 
-app.get ("/jogador"), (req, res) => {
-    res.json(jogador)
-}
-
-app.put ("/jogador:id", (req,res) => {
-    const id  = parseInt(res.params.id);
-    const posicao = jogador.findIndex(jogador => jogador.id===id);
+/* Aplicação de GET específico por ID do objeto*/
+app.get ("/jogador/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const posicao = jogador.findIndex(jogador => jogador.id === id);
 
     if (posicao !== -1) {
-        nome[posicao] = {id, ...req,body}
-        res.status(200).json([posicao]);
+    res.status(200).json(jogador[posicao]);
     }
-
     else {
-        res.status(404).json({ erro: "O Jogador não foi encontrado..."});
+        res.status(404).json({ erro: "O jogador não foi encontrado."});
+    }
+});
+
+
+/* Aplicação do GET geral, revelano o array inteiro */
+app.get ("/jogador", (req, res) => {
+    res.json(jogador);
+});
+
+
+/* Aplicação do PUT, onde o usuário pode atualizar alguma informação do array */
+app.put("/jogador/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const posicao = jogador.findIndex(jogador => jogador.id === id);
+
+  if (posicao !== -1) {
+    jogador[posicao] = { ...jogador[posicao], ...req.body, id };
+
+    res.status(200).json({...jogador[posicao]});
+  } else {
+    res.status(404).json({ erro: "O Jogador não foi encontrado..." });
+  }
+});
+
+
+/* Aplicação do DELETE, onde o usuário pode deletar qualque objeto que estiver dentro do array */
+app.delete ("/jogador/:id" , (req,res) => {
+    const id = parseInt(req.params.id);
+    const posicao = jogador.findIndex(jogador => jogador.id === id);
+
+    if (posicao !== -1) {
+        jogador.splice(posicao,1);
+        res.status(200).json({jogadore: jogador, mensagem: "O jogador foi deletado com sucesso!"});
+    }
+    else {
+        res.status(404).json({ erro: "Jogador não encontrado."});
     }
 })
 
 
+/* O Array foi criado para guardar as informações do clube*/
 let clube = [
     { id: 1, time: "Ibis" , presidente: "Ozir Ramos Junior" , estadio: "Estádio Municipal Ademir Cunha"},
     { id: 2, time: "Ponte preta" , presidente: "Marco Antônio" , estadio: "Estádio Moisés Lucarelli"},
@@ -45,28 +72,61 @@ let clube = [
     { id: 5, time: "Maranhão Atlético clube" , presidente: "Carlos Eduardo" , estadio: "Estádio Governador São Castelo"},
 ];
 
-app.get ("/clube/id:", (req, res) => {
-    if (posicao !== -1)
-    res.status(200).json(clube[posicao]);
-})
 
-app.put ("/clube:id", (req,res) => {
-    const id  = parseInt(res.params.id);
-    const posicao = clube.findIndex(clube => clube.id===id);
+/* Aplicação de GET específico por ID do objeto*/
+app.get ("/clube", (req, res) => {                                  
+    res.json(clube);
+});
+
+
+/* Aplicação do GET geral, revelano o array inteiro */
+app.get ("/clube/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const posicao = clube.findIndex(clube => clube.id === id);
 
     if (posicao !== -1) {
-        numero[posicao] = {id, ...req,body}
-        res.status(200).json([posicao]);
+        res.status(200).json(clube[posicao]);
+    }
+    else {
+        res.status(404).json({ erro: "O clube não foi encontrado"});
+    }
+})
+
+
+/* Aplicação do PUT, onde o usuário pode atualizar alguma informação do array */
+app.put ("/clube/:id", (req,res) => {
+    const id  = parseInt(req.params.id);
+    const posicao = clube.findIndex(clube => clube.id == id);
+
+    if (posicao !== -1) {
+        clube[posicao] = {...clube[posicao], ...req.body, id}
+
+        res.status(200).json(clube[posicao]);
     }
 
     else {
         res.status(404).json({ erro: "O clube não foi encontrado..."});
     }
+});
+
+
+/* Aplicação do DELETE, onde o usuário pode deletar qualque objeto que estiver dentro do array */
+app.delete("/clube/:id" , (req, res) => {
+    const id = parseInt(req.params.id);
+    const posicao = clube.findIndex(clube => clube.id === id);
+
+    if (posicao !== -1) {
+        res.status(200).json({jogadores: jogador , mensagem: "O clube foi deletado com sucesso!"});
+    }
+    else {
+        res.status(404).json({ erro: "O clube não foi encontrado"})
+    }
 })
+
 
 
 app.listen(port, () => {
 
-    console.log(`O time foi escalado em http://localhost${port}`);
+    console.log(`O time foi escalado em http://localhost:${port}`);
 
-})
+});
