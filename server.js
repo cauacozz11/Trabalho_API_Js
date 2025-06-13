@@ -12,6 +12,17 @@ let jogador = [
     { id: 5, name: "Gilson" ,  numero: 38 , perna_boa: "Esquerda"},  
 ];
  
+function hateoasJogador(jogador) {
+    return{
+        links: [
+            { rel:"self", method: "GET", href: `/jogador/${jogador.id}` },
+            { rel:"create", method: "POST", href: `/jogador/` },
+            { rel:"update", method: "PUT", href: `/jogador/${jogador.id}` },
+            { rel:"delete", method: "DELETE", href: `/jogador/${jogador.id}` },
+        ]
+
+    }
+}
 
 
 /* O Array foi criado para guardar as informações do clube*/
@@ -23,7 +34,17 @@ let clube = [
     { id: 5, time: "Maranhão Atlético clube" , presidente: "Carlos Eduardo" , estadio: "Estádio Governador São Castelo"},
 ];
 
+function hateoasClube(clube) {
+    return{
+        links: [
+            { rel:"self", method: "GET", href: `/clube/${clube.id}` },
+            { rel:"create", method: "POST", href: `/clube/` },
+            { rel:"update", method: "PUT", href: `/clube/${clube.id}` },
+            { rel:"delete", method: "DELETE", href: `/clube/${clube.id}` },
+        ]
 
+    }
+}
 
 /* Aplicação de GET específico por ID do objeto*/
 app.get ("/jogador/:id", (req, res) => {
@@ -31,7 +52,11 @@ app.get ("/jogador/:id", (req, res) => {
     const posicao = jogador.findIndex(jogador => jogador.id === id);
 
     if (posicao !== -1) {
-    res.status(200).json(jogador[posicao]);
+        const jogadorEncontrado = jogador[posicao];
+        res.status(200).json({
+            jogador: jogadorEncontrado,
+            _links: hateoasJogador(jogadorEncontrado).links
+        });
     }
     else {
         res.status(404).json({ erro: "O jogador não foi encontrado."});
@@ -42,9 +67,12 @@ app.get ("/jogador/:id", (req, res) => {
 
 /* Aplicação do GET geral, revelano o array inteiro */
 app.get ("/jogador", (req, res) => {
-    res.json(jogador);
+   const jogadoresComLinks = jogador.map(j => ({
+    ...j,
+    _links: hateoasJogador(j).links
+  }));
+  res.json(jogadoresComLinks);
 });
-
 
 
 /* Aplicação do PUT, onde o usuário pode atualizar alguma informação do array */
@@ -52,15 +80,16 @@ app.put("/jogador/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const posicao = jogador.findIndex(jogador => jogador.id === id);
 
-  if (posicao !== -1) {
+   if (posicao !== -1) {
     jogador[posicao] = { ...jogador[posicao], ...req.body, id };
-
-    res.status(200).json({...jogador[posicao]});
+    res.status(200).json({
+      jogador: jogador[posicao],
+      _links: hateoasJogador(jogador[posicao]).links
+    });
   } else {
-    res.status(404).json({ erro: "O Jogador não foi encontrado..." });
+    res.status(404).json({ erro: "O jogador não foi encontrado..." });
   }
 });
-
 
 
 /* Aplicação do DELETE, onde o usuário pode deletar qualque objeto que estiver dentro do array */
@@ -69,24 +98,33 @@ app.delete ("/jogador/:id" , (req,res) => {
     const posicao = jogador.findIndex(jogador => jogador.id === id);
 
     if (posicao !== -1) {
-        jogador.splice(posicao,1);
-        res.status(200).json({ mensagem: "O jogador foi deletado com sucesso!"});
-    }
-    else {
-        res.status(404).json({ erro: "Jogador não encontrado."});
-    }
-})
-
+    jogador.splice(posicao, 1);
+    res.status(200).json({
+      mensagem: "O jogador foi deletado com sucesso!",
+      _links: hateoasJogador().links
+    });
+  } else {
+    res.status(404).json({ erro: "Jogador não encontrado." });
+  }
+});
 
 app.post("/jogador" , (req,res) => {
-    const novoJogador = { id: jogador.lenght + 1, ...req.body};
-     jogador.push(novoJogador);
-     res.status(200).json(novoJogador,{ mensagem:"O jogador foi adicionado!"});
-})
+   const novoJogador = { id: jogador.length + 1, ...req.body };
+  jogador.push(novoJogador);
+  res.status(201).json({
+    mensagem: "O jogador foi adicionado!",
+    jogador: novoJogador,
+    _links: hateoasJogador(novoJogador).links
+  });
+});
 
 /* Aplicação de GET específico por ID do objeto*/
 app.get ("/clube", (req, res) => {                                  
-    res.json(clube);
+    const clubesComLinks = clube.map(c => ({
+    ...c,
+    _links: hateoasClube(c).links
+  }));
+  res.json(clubesComLinks);
 });
 
 
@@ -97,7 +135,11 @@ app.get ("/clube/:id", (req, res) => {
     const posicao = clube.findIndex(clube => clube.id === id);
 
     if (posicao !== -1) {
-        res.status(200).json(clube[posicao]);
+        const clubeEncontrado = clube[posicao];
+        res.status(200).json({
+            clube: clubeEncontrado,
+            _links: hateoasClube(clubeEncontrado).links
+        });
     }
     else {
         res.status(404).json({ erro: "O clube não foi encontrado"});
@@ -112,14 +154,14 @@ app.put ("/clube/:id", (req,res) => {
     const posicao = clube.findIndex(clube => clube.id == id);
 
     if (posicao !== -1) {
-        clube[posicao] = {...clube[posicao], ...req.body, id}
-
-        res.status(200).json(clube[posicao]);
-    }
-
-    else {
-        res.status(404).json({ erro: "O clube não foi encontrado..."});
-    }
+    clube[posicao] = { ...clube[posicao], ...req.body, id };
+    res.status(200).json({
+      clube: clube[posicao],
+      _links: hateoasClube(clube[posicao]).links
+    });
+  } else {
+    res.status(404).json({ erro: "O clube não foi encontrado..." });
+  }
 });
 
 
@@ -130,20 +172,26 @@ app.delete("/clube/:id" , (req, res) => {
     const posicao = clube.findIndex(clube => clube.id === id);
 
     if (posicao !== -1) {
-        res.status(200).json({ mensagem: "O clube foi deletado com sucesso!"});
-    }
-    else {
-        res.status(404).json({ erro: "O clube não foi encontrado"})
-    }
-})
+    clube.splice(posicao, 1);
+    res.status(200).json({
+      mensagem: "O clube foi deletado com sucesso!",
+      _links: hateoasClube().links
+    });
+  } else {
+    res.status(404).json({ erro: "O clube não foi encontrado" });
+  }
+});
 
 
-app.post("clube" , (req,res) => {
-    const novoClube = {id: clube.length + 1, ...req.body};
-    clube.push(novoClube);
-    res.status(200).json({ mensagem:"O clube foi adicionado!"});
-
-})
+app.post("/clube" , (req,res) => {
+    const novoClube = { id: clube.length + 1, ...req.body };
+  clube.push(novoClube);
+  res.status(201).json({
+    mensagem: "O clube foi adicionado!",
+    clube: novoClube,
+    _links: hateoasClube(novoClube).links
+  });
+});
 
 
 
