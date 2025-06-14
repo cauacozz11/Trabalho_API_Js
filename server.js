@@ -12,6 +12,9 @@ let jogador = [
     { id: 5, name: "Gilson" ,  numero: 38 , perna_boa: "Esquerda"},  
 ];
  
+
+
+/* Criação de uma função para aplicar o método HATEOAS no array de jogador*/
 function hateoasJogador(jogador) {
     return{
         links: [
@@ -34,6 +37,10 @@ let clube = [
     { id: 5, time: "Maranhão Atlético clube" , presidente: "Carlos Eduardo" , estadio: "Estádio Governador São Castelo"},
 ];
 
+
+
+
+/* Criação de uma função para aplicar o método HATEOAS no array de clube*/
 function hateoasClube(clube) {
     return{
         links: [
@@ -45,6 +52,8 @@ function hateoasClube(clube) {
 
     }
 }
+
+
 
 /* Aplicação de GET específico por ID do objeto*/
 app.get ("/jogador/:id", (req, res) => {
@@ -75,6 +84,7 @@ app.get ("/jogador", (req, res) => {
 });
 
 
+
 /* Aplicação do PUT, onde o usuário pode atualizar alguma informação do array */
 app.put("/jogador/:id", (req, res) => {
   const id = parseInt(req.params.id);
@@ -92,22 +102,23 @@ app.put("/jogador/:id", (req, res) => {
 });
 
 
-/* Aplicação do DELETE, onde o usuário pode deletar qualque objeto que estiver dentro do array */
-app.delete ("/jogador/:id" , (req,res) => {
-    const id = parseInt(req.params.id);
-    const posicao = jogador.findIndex(jogador => jogador.id === id);
 
-    if (posicao !== -1) {
+/* Aplicação do DELETE, onde o usuário pode deletar qualque objeto que estiver dentro do array */
+ app.delete("/jogador/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const posicao = jogador.findIndex(jogador => jogador.id === id);
+
+  if (posicao !== -1) {
     jogador.splice(posicao, 1);
-    res.status(200).json({
-      mensagem: "O jogador foi deletado com sucesso!",
-      _links: hateoasJogador().links
-    });
+    res.status(200).json({ mensagem: "O jogador foi deletado com sucesso!" });
   } else {
     res.status(404).json({ erro: "Jogador não encontrado." });
   }
 });
 
+
+
+/* Aplicação do método POST, onde o usuário pode incluir e adicionar informações e características a um novo ID de um array específico */
 app.post("/jogador" , (req,res) => {
    const novoJogador = { id: jogador.length + 1, ...req.body };
   jogador.push(novoJogador);
@@ -117,6 +128,8 @@ app.post("/jogador" , (req,res) => {
     _links: hateoasJogador(novoJogador).links
   });
 });
+
+
 
 /* Aplicação de GET específico por ID do objeto*/
 app.get ("/clube", (req, res) => {                                  
@@ -167,22 +180,21 @@ app.put ("/clube/:id", (req,res) => {
 
 
 /* Aplicação do DELETE, onde o usuário pode deletar qualque objeto que estiver dentro do array */
-app.delete("/clube/:id" , (req, res) => {
-    const id = parseInt(req.params.id);
-    const posicao = clube.findIndex(clube => clube.id === id);
+app.delete("/clube/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const posicao = clube.findIndex(clube => clube.id === id);
 
-    if (posicao !== -1) {
+  if (posicao !== -1) {
     clube.splice(posicao, 1);
-    res.status(200).json({
-      mensagem: "O clube foi deletado com sucesso!",
-      _links: hateoasClube().links
-    });
+    res.status(200).json({ mensagem: "O clube foi deletado com sucesso!" });
   } else {
-    res.status(404).json({ erro: "O clube não foi encontrado" });
+    res.status(404).json({ erro: "O clube não foi encontrado." });
   }
 });
 
 
+
+/* Aplicacção do método POST, onde o usuário pode incluir e adicionar informações e características a um novo ID de um array específico */
 app.post("/clube" , (req,res) => {
     const novoClube = { id: clube.length + 1, ...req.body };
   clube.push(novoClube);
