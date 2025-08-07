@@ -7,9 +7,9 @@ app.use(express.json());
 
 /* O Array foi criado para guardar as informações do time, nesse caso o vetor*/
 let jogador = [
-    { id: 1, name: "Fabin" , numero: 11 , perna_boa: "Direita"},
+    { id: 1, name: "Fabinho" , numero: 11 , perna_boa: "Direita"},
     { id: 2, name: "Jeferson" , numero: 21 , perna_boa: "Esquerda"}, 
-    { id: 3, name: "Marcelin" ,  numero: 32 ,  perna_boa: "Direita"},
+    { id: 3, name: "Marcelinho" ,  numero: 32 ,  perna_boa: "Direita"},
     { id: 4, name: "Ximbinha" , numero: 24 ,  perna_boa: "Direita"},
     { id: 5, name: "Gilson" ,  numero: 38 , perna_boa: "Esquerda"},  
 ];
